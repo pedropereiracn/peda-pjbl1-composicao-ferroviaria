@@ -7,17 +7,17 @@ public class Locomotiva extends Vagao {
 
    public Locomotiva(double comprimento, double peso, double potencia) {
       super(comprimento, peso);
-      // TODO: inicializar a potencia.
+      this.potencia = potencia;
    }
 
    public double getPotencia() {
-      // TODO: retornar a potencia.
-      return 0;
+      return potencia;
    }
 
    @Override
    public void imprime() {
-      // TODO: imprimir tipo e potencia, DEPOIS chamar super.imprime().
-      // Ordem da saida no exemplo do enunciado: Tipo, Potencia, Comprimento e Peso.
+      System.out.println("Tipo: Locomotiva");
+      System.out.println("Potência: " + potencia + " HP");
+      super.imprime();
    }
 }

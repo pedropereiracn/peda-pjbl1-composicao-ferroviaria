@@ -8,16 +8,17 @@ public class Passageiro extends Vagao {
 
    public Passageiro(double comprimento, double peso, int passageiros) {
       super(comprimento, peso);
-      // TODO: inicializar a quantidade de passageiros.
+      this.passageiros = passageiros;
    }
 
    public int getPassageiros() {
-      // TODO: retornar a quantidade de passageiros.
-      return 0;
+      return passageiros;
    }
 
    @Override
    public void imprime() {
-      // TODO: imprimir tipo e passageiros, DEPOIS chamar super.imprime().
+      System.out.println("Tipo: Passageiro");
+      System.out.println("Passageiros: " + passageiros);
+      super.imprime();
    }
 }

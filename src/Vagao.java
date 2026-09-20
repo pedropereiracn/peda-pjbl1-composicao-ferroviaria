@@ -10,21 +10,19 @@ public abstract class Vagao implements Serializable {
    protected double peso;        // Peso do vagao em toneladas.
 
    public Vagao(double comprimento, double peso) {
-      // TODO: inicializar os dois atributos.
+      this.comprimento = comprimento;
+      this.peso = peso;
    }
 
    public double getComprimento() {
-      // TODO: retornar o comprimento.
-      return 0;
+      return comprimento;
    }
 
    public double getPeso() {
-      // TODO: retornar o peso.
-      return 0;
+      return peso;
    }
 
    public void imprime() {
-      // TODO: imprimir os atributos COMUNS (comprimento e peso).
-      // As filhas chamam este metodo via super.imprime().
+      System.out.println("Comprimento: " + comprimento + " m, Peso: " + peso + " toneladas.");
    }
 }

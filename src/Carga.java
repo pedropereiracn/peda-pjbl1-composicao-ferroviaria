@@ -10,16 +10,17 @@ public class Carga extends Vagao {
 
    public Carga(double comprimento, double peso) {
       super(comprimento, peso);
-      // TODO: calcular a carga como 75% do peso total.
+      this.carga = peso * 0.75;
    }
 
    public double getCarga() {
-      // TODO: retornar a carga.
-      return 0;
+      return carga;
    }
 
    @Override
    public void imprime() {
-      // TODO: imprimir tipo e carga, DEPOIS chamar super.imprime().
+      System.out.println("Tipo: Carga");
+      System.out.println("Carga transportada: " + carga + " toneladas");
+      super.imprime();
    }
 }
