@@ -45,8 +45,14 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    }
 
    public Locomotiva criarLocomotivaIgual() {
-      // TODO: retornar uma locomotiva igual as ja presentes na composicao,
-      // para uso no requisito 7.
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Locomotiva) {      // Usa a primeira encontrada como modelo.
+            Locomotiva l = (Locomotiva) obj;
+            return new Locomotiva(l.getComprimento(), l.getPeso(), l.getPotencia());
+         }
+      }
       return null;
    }
 
@@ -73,63 +79,136 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    // ---------- Requisito 4: contagem de vagoes por tipo ----------
 
    private int contarLocomotivas() {
-      // TODO: percorrer com rewind()/next() e contar instanceof Locomotiva.
-      return 0;
+      int total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Locomotiva)
+            total = total + 1;
+      }
+      return total;
    }
 
    private int contarVagoesPassageiros() {
-      // TODO: idem para Passageiro.
-      return 0;
+      int total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Passageiro)
+            total = total + 1;
+      }
+      return total;
    }
 
    private int contarVagoesCarga() {
-      // TODO: idem para Carga.
-      return 0;
+      int total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Carga)
+            total = total + 1;
+      }
+      return total;
    }
 
    // ---------- Requisito 5: comprimento e peso ----------
 
    private double calcularComprimentoTotal() {
-      // TODO: somar o comprimento dos vagoes MAIS os espacos entre eles.
-      // ATENCAO: com n vagoes existem (n-1) espacos de 2 m cada.
-      return 0;
+      double total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         total += ((Vagao) obj).getComprimento();
+      }
+      if (getSize() >= 2)                   // Espacos so existem entre vagoes.
+         total += (getSize() - 1) * 2;
+      return total;
    }
 
    private double calcularPesoTotal() {
-      // TODO: somar o peso de todos os vagoes.
-      return 0;
+      double total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         total += ((Vagao) obj).getPeso();
+      }
+      return total;
    }
 
    // ---------- Requisito 6: passageiros e carga ----------
 
    private int calcularTotalPassageiros() {
-      // TODO: somar getPassageiros() dos vagoes do tipo Passageiro.
-      return 0;
+      int total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Passageiro)
+            total += ((Passageiro) obj).getPassageiros();
+      }
+      return total;
    }
 
    private double calcularCargaTotal() {
-      // TODO: somar getCarga() dos vagoes do tipo Carga.
-      // O enunciado mostra este metodo pronto na secao 3.4.2.
-      return 0;
+      double total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Carga)
+            total += ((Carga) obj).getCarga();
+      }
+      return total;
+   }
+
+   private double calcularPotenciaTotal() {
+      double total = 0;
+      rewind();
+      for (int i = 0; i < getSize(); i++) {
+         Object obj = next();
+         if (obj instanceof Locomotiva)
+            total += ((Locomotiva) obj).getPotencia();
+      }
+      return total;
    }
 
    // ---------- Requisito 7: potencia ----------
 
    private String verificarPotencia() {
-      // TODO: calcular a relacao potencia/peso da composicao.
-      // Minimo aceitavel: HPT = 1.05 HP/Ton.
-      // Se for suficiente, informar. Se nao, informar quanta potencia falta
-      // e quantas locomotivas IGUAIS as ja incluidas devem ser adicionadas.
-      // ATENCAO: cada locomotiva adicionada tambem soma peso a composicao.
-      return null;
+      double peso = calcularPesoTotal();
+      double potencia = calcularPotenciaTotal();
+      double razao = potencia / peso;
+      if (razao >= 1.05)
+         return "Potencia suficiente. Relacao: " + razao + " HP/t.";
+      double falta = 1.05 * peso - potencia;
+      Locomotiva modelo = criarLocomotivaIgual();
+      if (modelo == null)
+         return "Composicao sem locomotiva.";
+      double hpLoco = modelo.getPotencia();
+      double pesoLoco = modelo.getPeso();
+      double novaPotencia = potencia;
+      double novoPeso = peso;
+      int qtde = 0;
+      while (novaPotencia / novoPeso < 1.05) {   // Nao se sabe quantas de antemao.
+         qtde++;
+         novaPotencia += hpLoco;
+         novoPeso += pesoLoco;
+      }
+      return "Potencia insuficiente. Relacao: " + razao + " HP/t. Faltam "
+           + falta + " HP. Adicionar " + qtde + " locomotiva(s) iguais.";
    }
 
    // ---------- Requisito 8: diagnostico (2,0 pontos) ----------
 
    public void diagnostico() {
-      // TODO: montar o diagnostico usando os metodos dos requisitos 4 a 7.
-      // Este e o UNICO ponto de acesso a eles: o programa principal nao os
-      // chama diretamente.
+      System.out.println("=== DIAGNOSTICO DA COMPOSICAO ===");
+      System.out.println("Total de vagoes......: " + getSize());
+      System.out.println("Locomotivas..........: " + contarLocomotivas());
+      System.out.println("Vagoes de passageiros: " + contarVagoesPassageiros());
+      System.out.println("Vagoes de carga......: " + contarVagoesCarga());
+      System.out.println("Comprimento total....: " + calcularComprimentoTotal() + " m");
+      System.out.println("Peso total...........: " + calcularPesoTotal() + " t");
+      System.out.println("Passageiros..........: " + calcularTotalPassageiros());
+      System.out.println("Carga total..........: " + calcularCargaTotal() + " t");
+      System.out.println(verificarPotencia());
    }
 
    // ---------- Requisito 9: primeiro e ultimo vagao ----------
