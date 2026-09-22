@@ -40,8 +40,20 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    // ---------- Requisito 2: composicao padrao (2,0 pontos) ----------
 
    public void criarComposicaoPadrao() {
-      // TODO: esvaziar a composicao atual, incluir os vagoes do Anexo
-      // (1 locomotiva, 50 de passageiros, 30 de carga) e salvar em arquivo.
+       // remove todos os vagoes da composicao anterior
+      while (!isEmpty())
+         deleteLast();
+      addLast(new Locomotiva(20, 150, 2500)); // adiciona a locomotiva como primeiro vagao
+       // adiciona 50 vagoes de passageiros depois da locomotiva
+      for (int i = 0; i < 50; i++) {
+         addLast(new Passageiro(24, 40, 30));
+      }
+      // adiciona 30 vagoes de carga no final da composicao
+      for (int i = 0; i < 30; i++) {
+         addLast(new Carga(17, 20));
+      }
+      // grava a composicao padrao no arquivo
+      salvar();
    }
 
    public Locomotiva criarLocomotivaIgual() {
