@@ -13,27 +13,26 @@ import java.io.*;
  * apenas pelo metodo diagnostico().
  */
 public class ComposicaoFerroviaria extends Deque implements Serializable {
-   private ObjetoPersistente arqComp; 
+   private ObjetoPersistente arqComp; // Arquivo de persistencia da composicao.
 
    // ---------- Requisito 1: persistencia ----------
 
    public ComposicaoFerroviaria(int N, String nomeArquivo) {
-      super(N);                                   
+      super(N);                                   // Chama o construtor de Deque.
       arqComp = new ObjetoPersistente(nomeArquivo);
-      carregar();                                 
+      carregar();                                 // Carrega o arquivo, se existir.
    }
 
    private void salvar() {
-      arqComp.salvar(this); 
+      arqComp.salvar(this);
    }
 
    private void carregar() {
       ComposicaoFerroviaria cf = (ComposicaoFerroviaria) arqComp.carregar();
-      if (cf != null) {          
-         
+      if (cf != null) {
          this.front = cf.front;
          this.rear = cf.rear;
-         this.ptr = cf.ptr;     
+         this.ptr = cf.ptr;                // ptr, nao ip: e o nome no Deque da pratica.
          this.size = cf.size;
          this.N = cf.N;
          this.data = cf.data;
@@ -43,19 +42,19 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    // ---------- Requisito 2: composicao padrao ----------
 
    public void criarComposicaoPadrao() {
-      
+      // remove todos os vagoes da composicao anterior
       while (!isEmpty())
          deleteLast();
-      addLast(new Locomotiva(20, 150, 2500));
-       
+      addLast(new Locomotiva(20, 150, 2500)); // adiciona a locomotiva como primeiro vagao
+      // adiciona 50 vagoes de passageiros depois da locomotiva
       for (int i = 0; i < 50; i++) {
          addLast(new Passageiro(24, 40, 30));
       }
-      
+      // adiciona 30 vagoes de carga no final da composicao
       for (int i = 0; i < 30; i++) {
          addLast(new Carga(17, 20));
       }
-      
+      // grava a composicao padrao no arquivo
       salvar();
    }
 
@@ -63,7 +62,7 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
       rewind();
       for (int i = 0; i < getSize(); i++) {
          Object obj = next();
-         if (obj instanceof Locomotiva) {      
+         if (obj instanceof Locomotiva) {      // Usa a primeira encontrada como modelo.
             Locomotiva l = (Locomotiva) obj;
             return new Locomotiva(l.getComprimento(), l.getPeso(), l.getPotencia());
          }
@@ -74,28 +73,28 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    // ---------- Requisito 3: insercao e remocao ----------
 
    public void inserirInicio(Vagao v) {
-      addFirst(v); 
-      salvar();    
+      addFirst(v);
+      salvar();                  // Req. 3: atualiza o arquivo a cada operacao.
    }
 
    public void inserirFim(Vagao v) {
-      addLast(v);  
-      salvar();   
+      addLast(v);
+      salvar();
    }
 
    public Vagao removerInicio() {
-      if (isEmpty())             
-         return null;           
+      if (isEmpty())             // Evita o System.exit do Deque vazio.
+         return null;
       Vagao v = (Vagao) deleteFirst();
-      salvar();                  
+      salvar();
       return v;
    }
 
    public Vagao removerFim() {
-      if (isEmpty())             
-         return null;             
+      if (isEmpty())
+         return null;
       Vagao v = (Vagao) deleteLast();
-      salvar();                   
+      salvar();
       return v;
    }
 
@@ -143,7 +142,7 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
          Object obj = next();
          total += ((Vagao) obj).getComprimento();
       }
-      if (getSize() >= 2)                   
+      if (getSize() >= 2)                   // Espacos so existem entre vagoes.
          total += (getSize() - 1) * 2;
       return total;
    }
@@ -210,7 +209,7 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
       double novaPotencia = potencia;
       double novoPeso = peso;
       int qtde = 0;
-      while (novaPotencia / novoPeso < 1.05) {   
+      while (novaPotencia / novoPeso < 1.05) {   // Nao se sabe quantas de antemao.
          qtde++;
          novaPotencia += hpLoco;
          novoPeso += pesoLoco;
@@ -237,10 +236,10 @@ public class ComposicaoFerroviaria extends Deque implements Serializable {
    // ---------- Requisito 9: primeiro e ultimo vagao ----------
 
    public Vagao primeiroVagao() {
-      return (Vagao) peekFront(); 
+      return (Vagao) peekFront();
    }
 
    public Vagao ultimoVagao() {
-      return (Vagao) peekRear(); 
+      return (Vagao) peekRear();
    }
 }

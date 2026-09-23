@@ -1,5 +1,6 @@
 *.class
 *.dat
+!composicao.dat
 out/
 bin/
 .DS_Store
